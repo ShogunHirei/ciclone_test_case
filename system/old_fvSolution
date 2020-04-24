@@ -1,0 +1,123 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+solvers
+{
+    p
+    {
+        solver           PBiCGStab;
+        preconditioner
+        {
+             preconditioner          GAMG;
+             smoother                DIC;//DILU;
+             nCellsInCoarsestLevel   20;//40;
+             directSolveCoarset      true;
+             agglomerator            dummy; //dummy
+             nLevels                 2;
+             //nPreSweeps              4;
+             //nPostSweeps             4;
+             //nFinestSweeps           4;
+             mergeLevels             1;    
+        }
+        tolerance        1e-12;
+        relTol           1.0e-4;
+        minIter          0;
+        maxIter          1000;
+    }
+
+    //pFinal
+    //{
+    //    $p;
+    //    tolerance       1e-06;
+    //    relTol          0;
+    //
+    //}
+
+    "(U|k|epsilon|omega|R)"
+    {
+        solver          smoothSolver;
+        smoother        DILUGaussSeidel;
+        nSweeps         2;
+        /*preconditioner*/
+        /*{*/
+            /*preconditioner          GAMG;*/
+            /*smoother                DILUGaussSeidel;*/
+            /*cacheAgglomeration      true;*/
+            /*nCellsInCoarsestLevel   20;//40;*/
+            /*agglomerator            dummy;*/
+            /*nLevels                 2;*/
+            /*nPreSweeps              4;*/
+            /*nPostSweeps             4;*/
+            /*nFinestSweeps           4;*/
+            /*mergeLevels 1;*/
+
+        /*}*/
+        tolerance       1e-12;
+        relTol          1.0e-6;
+        minIter         5;
+        maxIter         1000;
+
+    }
+
+    //"(U|k|epsilon|omega|R)Final"
+    //{
+    //    $U;
+    //    tolerance       1e-05;
+    //    relTol          0;
+    //}
+    Phi
+    {
+        $p;
+    }
+}
+
+SIMPLE
+{
+    nNonOrthogonalCorrectors 4;
+    nCorrectors              2;
+    //consistent      yes;
+    momentumPredictor       on;
+    pRefCell        0;
+    pRefValue       0;
+    
+    residualControl
+    {
+        U         1e-5;
+        p         5e-4;
+    }
+}
+
+relaxationFactors
+{
+    fields
+    {
+        p               0.5;
+        pFinal          1;
+    }
+    equations
+    {
+        "(U|k|epsilon|omega)"       0.5;
+        "(U|k|epsilon|omega)Final"  0.9;
+        R                           0.5;
+    }
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors 20;
+}
+
+// ************************************************************************* //
