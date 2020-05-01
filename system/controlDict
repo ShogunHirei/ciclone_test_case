@@ -21,7 +21,7 @@ libs
 
 interval        100;
 
-application     simpleFoam;
+application     simpleFoamR;
 
 startFrom       latestTime;
 
