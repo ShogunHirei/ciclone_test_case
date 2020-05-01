@@ -32,15 +32,15 @@ divSchemes
 {
     default          none;
     
-    div(phi,U)       bounded Gauss vanLeerV grad(x);
+    div(phi,U)       bounded Gauss linearUpwindV grad(x);
     div(phi,k)       bounded Gauss upwind grad(k); //linearUpwind grad(k);
     div(phi,epsilon) bounded Gauss upwind grad(epsilon);  //linearUpwind grad(epsilon); 
     div(phi,omega)   bounded Gauss upwind;// grad(epsilon); //linearUpwind grad(epsilon);
     
-    div((nuEff*dev2(T(grad(U))))) Gauss SFCD phi;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;//SFCD phi;
     
     //For SSTCC
-    div(phi,symm(grad(U)))        bounded Gauss MUSCL; 
+    div(phi,symm(grad(U)))        bounded Gauss upwind;//MUSCL; 
     
     //For LLR
     div((nu*dev2(T(grad(U)))))    Gauss linear;
@@ -50,7 +50,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default         Gauss linear orthogonal;
+    default         Gauss linear corrected;//orthogonal;
 }
 
 interpolationSchemes
@@ -60,7 +60,7 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         orthogonal;
+    default         corrected;//orthogonal;
 }
 
 wallDist

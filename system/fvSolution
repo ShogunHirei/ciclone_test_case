@@ -51,9 +51,10 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 4;
-    /*consistent      yes;*/
+    consistent      yes;
     pRefCell        0;
     pRefValue       0;
+    /*momentumPredictor yes;*/
     
     residualControl
     {
@@ -69,11 +70,11 @@ relaxationFactors
 {
     fields
     {
-        p               0.9;
+        p               0.5;
     }
     equations
     {
-        U               0.9;
+        U               0.7;
         
         k               0.55;       
         omega           0.55;
@@ -83,9 +84,9 @@ relaxationFactors
     }
 }
 
-/*potentialFlow*/
-/*{*/
-    /*nNonOrthogonalCorrectors 20;*/
-/*}*/
+potentialFlow
+{
+    nNonOrthogonalCorrectors 20;
+}
 
 // ************************************************************************* //
